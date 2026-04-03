@@ -1,18 +1,19 @@
 import numpy as np
 from LocalStiffness import FEM_PlateBending
 from GlobalStiffness import FEM_Assemble
+from PostProcessing import Post_Processing
 from meshing import rectangularmesh
 from Utilities import CCCC, SSSS, V_Beam, H_Beam, UniformLoad
 from plots import Plot_PlateNodes
 
 'Geometric Properties'
-LX = 90
-LY = 90
-EX = 3*6
-EY = 3*6
+LX = 1500
+LY = 1500
+EX = 3*9
+EY = 3*9
 Gpx = 2
 Gpy = 2
-t = 2
+t = 3
 
 'Create a rectangular mesh of sides LX, LY with EX and EY subdivisions with Lower Left mesh node at coordinate (0,0)'
 RectOutput = rectangularmesh(LX, LY, EX, EY, 0, 0)
@@ -24,7 +25,7 @@ y = NodeCoord[:,1]
 
 'Introduce Material Properties'
 materials = np.zeros((2,2), dtype=np.float64)
-'Real Material Properties'
+'Solid Material Properties'
 materials[0,0] = 2_039_000 #Modulus of Elasticity Steel (kgf/cm2)
 materials[0,1] = 0.3 #Poisson's Ratio
 'Void Material'
@@ -33,13 +34,13 @@ materials[1,1] = 1e-6 #Poisson's Ratio
 
 'Calculate the Element Stiffness Matrices Kij and Shape Matrices Bij'
 K_Local = FEM_PlateBending(LX, LY, EX, EY, Gpx, Gpy, t, materials)
-Kij = K_Local.Local_Stiffness(ElementNodes, NodeCoord)
+Kij, Bij = K_Local.Local_Stiffness(ElementNodes, NodeCoord)
 
 'Specify Voided or Solid Elements'
 VoidCheck = [1]*EX*EY #All solid elements
 
 'Uniform Load (kg/cm2)'
-LC_Nodes = UniformLoad(EX, EY, LX, LY, .05) #q (kg/cm**2), LX,LY (cm)
+LC_Nodes = UniformLoad(EX, EY, LX, LY, .01) #q (kg/cm**2), LX,LY (cm)
 'Input Uniform Load values into Force Vector F'
 DGoF = 3*(EX+1)*(EY+1) #Degrees of Freedom
 F = np.zeros((DGoF, 1), dtype=np.float64)
@@ -69,10 +70,12 @@ BC  = np.concatenate(args, axis=0)
 BC = np.sort(np.unique(BC))
 
 'Calculate vertical displacement vector'
-K_Global = FEM_Assemble(VoidCheck, LX, LY, EX, EY, LC_Nodes, BC, Gpx, Gpy, t)
+K_Global = FEM_Assemble(VoidCheck, EX, EY, Gpx, Gpy, BC)
 K = K_Global.Global_Stiffnes_Matrix(ElementNodes, Kij)
 # print(K)
 v = K_Global.Displacement_Vector(K,F)
 print(v)
 'Plotting Displacements'
 Plot_PlateNodes(x, y, EX, EY, LX, LY, v, 'Deflection (w, cm)')
+PostProcessing = Post_Processing(VoidCheck, LX, LY, EX, EY, Gpx, Gpy, t, materials, Bij, NodeCoord, ElementNodes, v)
+PostProcessing.Calculate_Forces(plot=True)

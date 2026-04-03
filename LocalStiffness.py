@@ -1,5 +1,4 @@
 import numpy as np
-
 class FEM_PlateBending():
     def __init__(self, LX, LY, EX, EY, Gpx, Gpy, t, materials):
         self.LX = LX
@@ -12,6 +11,17 @@ class FEM_PlateBending():
         self.Elements = EX*EY
         self.t = t
         self.materials = materials
+        
+        'Kirchoff Theory Revision'
+        if t/(LX/EX) < .1:
+            print('t/(LX/EX) <= .1 => OK, Kirchoff theory applies')
+        else:
+            print('t/(LX/EX) > .1 => NO OK, Reissner-Midlin theory should be used')
+        if t/(LY/EY) < .1:
+            print('t/(LY/EY) <= .1 => OK, Kirchoff theory applies')
+        else:
+            print('t/(LY/EY) > .1 => NO OK, Reissner-Midlin theory should be used')
+
         'Location of Gauss Points: The order in the double for loop for Gauss points (xi, eta) is the following: (-,-), (-,+), (+,-), (+,+)'
         'This means that the noode coordinates of the mesh are in the following order: LeftBottom, LeftUp, RightBottom, RightUp'
         'Location of Gauss Points in the X (Xi) direction'
@@ -113,4 +123,4 @@ class FEM_PlateBending():
                     # Void & solid element matrices for this GP
                     Kij[e, i, j, 0, :, :] = w * (BT @ (self.D_void @ B))
                     Kij[e, i, j, 1, :, :] = w * (BT @ (self.D_sol  @ B))
-        return Kij
+        return Kij, Bij

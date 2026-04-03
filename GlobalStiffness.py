@@ -1,21 +1,14 @@
 import numpy as np
 from scipy.sparse import coo_matrix, csc_matrix
 from scipy.sparse.linalg import spsolve
-
 class FEM_Assemble():
-    def __init__(self, VoidCheck, LX, LY, EX, EY, LC_Nodes, BC, Gpx, Gpy, t):
+    def __init__(self, VoidCheck, EX, EY, Gpx, Gpy, BC):
         self.VoidCheck = VoidCheck
-        self.LX = LX
-        self.LY = LY
-        self.EX = EX
-        self.EY = EY
         self.DGoF = 3*(EX+1)*(EY+1)
         self.Elements = EX*EY
-        self.LC_Nodes = LC_Nodes
         self.BC = BC
         self.Gpx = Gpx
         self.Gpy = Gpy
-        self.t = t
     def Global_Stiffnes_Matrix(self, ElementNodes, Kij):
         'Number of Degrees of Freedom of global stiffness matrix'
         rows, cols, data = [], [], []
