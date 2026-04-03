@@ -11,12 +11,14 @@ class FEM_PlateBending():
         self.Elements = EX*EY
         self.t = t
         self.materials = materials
-        
+
         'Kirchoff Theory Revision'
+        print('t/(LX/EX) = ' + str(t/(LX/EX)))
         if t/(LX/EX) < .1:
             print('t/(LX/EX) <= .1 => OK, Kirchoff theory applies')
         else:
             print('t/(LX/EX) > .1 => NO OK, Reissner-Midlin theory should be used')
+        print('t/(LY/EX) = ' + str(t/(LY/EY)))
         if t/(LY/EY) < .1:
             print('t/(LY/EY) <= .1 => OK, Kirchoff theory applies')
         else:
