@@ -16,8 +16,7 @@ def Plot_PlateNodes(mesh_x, mesh_y, EX, EY, LX, LY, Z, caption):
     # Customize the z axis.
     ax.set_box_aspect([1, LY/LX, scale])
     # ax.zaxis.set_major_locator(LinearLocator(10))
-    # A StrMethodFormatter is used automatically
-    ax.zaxis.set_major_formatter('{x:.02f}')
+    # ax.zaxis.set_major_formatter('{x:.02f}')
     # Add a color bar which maps values to colors.
     fig.colorbar(surf, shrink=0.25, aspect=5)
     plt.title(caption)
