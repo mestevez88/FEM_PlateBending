@@ -9,8 +9,8 @@ from plots import Plot_PlateNodes
 'Geometric Properties'
 LX = 1500
 LY = 1500
-EX = 3*9
-EY = 3*9
+EX = 3*15
+EY = 3*15
 Gpx = 2
 Gpy = 2
 t = 3
@@ -72,9 +72,7 @@ BC = np.sort(np.unique(BC))
 'Calculate vertical displacement vector'
 K_Global = FEM_Assemble(VoidCheck, EX, EY, Gpx, Gpy, BC)
 K = K_Global.Global_Stiffnes_Matrix(ElementNodes, Kij)
-# print(K)
 v = K_Global.Displacement_Vector(K,F)
-print(v)
 'Plotting Displacements'
 Plot_PlateNodes(x, y, EX, EY, LX, LY, v, 'Deflection (w, cm)')
 PostProcessing = Post_Processing(VoidCheck, LX, LY, EX, EY, Gpx, Gpy, t, materials, Bij, NodeCoord, ElementNodes, v)
