@@ -9,21 +9,11 @@ The "main.py" script allows a more flexible use of the implementation. Here, the
 4) Load Vector
 5) Boundary Conditions
 
-The "LocalStiffness.py" script contains a class called FEM_PlateBending. The class is initialized by specifying the following parameters:
-LX: Length of the plate in the X-direction.
-LY: Length of the plate in the Y-direction.
-EX: Number of rectangular elements in the X-direction.
-EY: Number of rectangular elements in the Y-direction.
-Gpx: Number of Gauss Points for numerical integration in the X-direction.
-Gpy: Number of Gauss Points for numerical integration in the Y-direction.
-t: Plate thickness.
-materials: a 2 by 2 material matrix specifying the Elasticity Modulus (E) and Poisson's ratio (\nu) of the Solid and Voided materials.
+The **LocalStiffness.py** script calculates the local stifness matrices for each rectangular mesh element considering either a solid and a voided material.
+
+The **GlobalStiffness.py** scripts constructs the global stiffness matrix $K$ by allocating the nodal stiffness provided by each adjacent plate element having either solid or voided material properties.
 
 **Installation** 
 1) Download this repository to your local drive.
-2) Create a virtual environment.
-3) Activate your virtual environment.
-4) Install rquirements.txt file typing "pip install -r requirements.txt".
-
-**Usage**
-1) 
+2) Create a new virtual environment and activate it.
+3) Install the requirements specified in rquirements.txt by typing "pip install -r requirements.txt".
